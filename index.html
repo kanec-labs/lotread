@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>LotRead — Tennessee site-work cost report (pre-launch)</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --paper: #fdfdfb;
+    --line: #ddd8cf;
+    --accent: #2f5233;
+    --muted: #6b6b63;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+  }
+  .wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 48px 24px 96px;
+  }
+  header.masthead {
+    margin-bottom: 40px;
+  }
+  .wordmark {
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+  }
+  .test-banner {
+    background: #f4efe2;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+  h1 {
+    font-size: 1.9rem;
+    line-height: 1.25;
+    margin: 0 0 16px;
+  }
+  .dek {
+    font-size: 1.1rem;
+    color: var(--muted);
+    margin: 0 0 32px;
+  }
+  section {
+    margin-bottom: 40px;
+  }
+  h2 {
+    font-size: 1.1rem;
+    margin: 0 0 12px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 8px;
+  }
+  ul {
+    padding-left: 20px;
+    margin: 0;
+  }
+  li { margin-bottom: 8px; }
+  .offer-box {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 28px;
+    background: #fff;
+  }
+  .price {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 4px 0 4px;
+  }
+  .price-note {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: 0 0 20px;
+  }
+  .cta {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    padding: 14px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 1rem;
+    font-family: inherit;
+  }
+  .cta.disabled {
+    background: #a9a49b;
+    cursor: not-allowed;
+  }
+  #cta-note {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  #cta-note.error {
+    color: #9a3b3b;
+  }
+  #cta-note.success {
+    color: var(--accent);
+  }
+  .email-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .email-form input[type="email"] {
+    flex: 1 1 220px;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+  }
+  .hp-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .fine-print {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .fine-print p { margin: 0 0 10px; }
+  footer {
+    border-top: 1px solid var(--line);
+    margin-top: 48px;
+    padding-top: 20px;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="wordmark">LotRead</div>
+  </header>
+
+  <div class="test-banner">
+    This is a pre-launch reservation page. LotRead does not exist as a working product
+    yet. We are testing whether this is worth building before we build it. Reserving a
+    spot costs nothing to try — see the refund terms below.
+  </div>
+
+  <h1>Know what site work will cost before your due-diligence window closes.</h1>
+  <p class="dek">
+    A parcel-specific estimate for driveway, grading, septic feasibility, and utility
+    distance on raw land in Tennessee — built from lidar elevation data and soil survey
+    data for the actual parcel, not a county average.
+  </p>
+
+  <section>
+    <h2>The problem</h2>
+    <p>
+      You're inside a due-diligence window on a parcel and you don't know whether making
+      it buildable — driveway, clearing, grading a pad, septic, getting utilities to the
+      site — costs $20,000 or $120,000. State-average guidance doesn't answer that. A
+      site engineer or surveyor can, but hiring one is slow and expensive relative to a
+      30–90 day window, especially for a single-lot residential buyer.
+    </p>
+  </section>
+
+  <section>
+    <h2>What the report covers</h2>
+    <ul>
+      <li>Driveway length and grade from the road to a buildable bench</li>
+      <li>Cut-and-fill volume estimate for a house pad</li>
+      <li>Septic feasibility class, from soil survey data</li>
+      <li>Distance to the nearest utility line</li>
+      <li>Floodplain / wetland flag</li>
+      <li>A plain-English cost range with the two or three biggest cost drivers explained</li>
+    </ul>
+    <p class="fine-print">
+      Tennessee parcels only, for now. This is a screening-grade estimate meant to help
+      you decide whether to keep negotiating or walk away — not a substitute for a
+      licensed surveyor, engineer, or contractor bid. Generated from public elevation and
+      soil data (USGS, NRCS) using automated measurement plus an AI-written summary of
+      the numbers. Not an appraisal, not a perc test, not a guarantee.
+    </p>
+  </section>
+
+  <section>
+    <h2>Reserve your spot</h2>
+    <div class="offer-box">
+      <div class="price">$49</div>
+      <p class="price-note">One-time, one parcel. Not a subscription.</p>
+      <p class="fine-print">
+        Leave your email — we'll notify you when this launches, and honor $49 for your
+        first report. No payment is collected now; this page is a pre-launch demand
+        test, not a working checkout. If we don't ship, we'll tell you.
+      </p>
+      <form id="reserve-form" class="email-form" novalidate>
+        <label for="reserve-email" class="hp-field">Email</label>
+        <input
+          type="email"
+          id="reserve-email"
+          name="email"
+          placeholder="you@example.com"
+          required
+          autocomplete="email"
+        >
+        <!-- Honeypot: hidden from real users via CSS, left blank by them; bots that
+             auto-fill every field trip it. Server-side check discards anything with
+             this field non-empty. -->
+        <label for="reserve-hp" class="hp-field">Leave this field blank</label>
+        <input type="text" id="reserve-hp" name="botcheck" class="hp-field" tabindex="-1" autocomplete="off">
+        <button type="submit" id="reserve-submit" class="cta">Notify me at $49</button>
+      </form>
+      <span id="cta-note" role="status" aria-live="polite"></span>
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      LotRead is a pre-launch project. No report has shipped yet. We're testing whether
+      enough people want this before we build it.
+    </p>
+  </footer>
+
+</div>
+
+<script>
+  // Swap point for going live: this page uses Web3Forms (web3forms.com) as the email-
+  // capture backend — a free-tier, static-site-friendly "form to email" service. No
+  // Stripe or other payment-processing account exists or is referenced anywhere in
+  // this file. The Web3Forms access key is NOT a payment credential and is not secret:
+  // Web3Forms designs it to be embedded in public client-side code (it only routes a
+  // submission to a destination email; it cannot read or move money). It still isn't
+  // hardcoded here because no Web3Forms account exists yet — see README.md for the
+  // one-time setup step. Once created, replace the placeholder below with the real key
+  // (referenced as env:WEB3FORMS_ACCESS_KEY at deploy time, baked into this static file
+  // at deploy since there is no server-side templating step here).
+  var WEB3FORMS_ACCESS_KEY = "REPLACE_WITH_WEB3FORMS_ACCESS_KEY";
+  var WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
+
+  document.addEventListener("DOMContentLoaded", function () {
+    var form = document.getElementById("reserve-form");
+    var submitBtn = document.getElementById("reserve-submit");
+    var note = document.getElementById("cta-note");
+    var notConfigured = !WEB3FORMS_ACCESS_KEY || WEB3FORMS_ACCESS_KEY.indexOf("REPLACE_WITH") === 0;
+
+    if (notConfigured) {
+      submitBtn.disabled = true;
+      submitBtn.classList.add("disabled");
+      note.textContent = "Reservations aren't open yet — this page is a pre-launch test.";
+      form.addEventListener("submit", function (e) { e.preventDefault(); });
+      return;
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var emailField = document.getElementById("reserve-email");
+      var hp = document.getElementById("reserve-hp");
+      var email = emailField.value.trim();
+
+      if (hp.value) {
+        // Honeypot tripped — pretend success, do not call the API, do not tip off the bot.
+        note.classList.remove("error");
+        note.classList.add("success");
+        note.textContent = "Thanks — we'll be in touch at launch.";
+        form.reset();
+        return;
+      }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        note.classList.remove("success");
+        note.classList.add("error");
+        note.textContent = "That doesn't look like a valid email address.";
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sending…";
+      note.classList.remove("error", "success");
+      note.textContent = "";
+
+      fetch(WEB3FORMS_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: "LotRead WTP smoke test — reservation",
+          from_name: "LotRead WTP page",
+          email: email,
+          message: "Reserved at $49 on the LotRead pre-launch WTP smoke test page."
+        })
+      })
+        .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
+        .then(function (result) {
+          if (result.ok && result.data && result.data.success) {
+            note.classList.add("success");
+            note.textContent = "Thanks — we'll notify you at launch and honor $49.";
+            form.reset();
+          } else {
+            throw new Error("submit failed");
+          }
+        })
+        .catch(function () {
+          note.classList.add("error");
+          note.textContent = "Something went wrong — please try again in a moment.";
+        })
+        .finally(function () {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Notify me at $49";
+        });
+    });
+  });
+</script>
+
+</body>
+</html>
