@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>LotRead — Tennessee site-work cost report</title>
+<title>LotRead — site-work cost report (pre-launch)</title>
 <style>
   :root {
     --ink: #1a1a1a;
@@ -56,6 +56,15 @@
     display: block;
     width: 100%;
     height: auto;
+  }
+  /* The hero SVG scales uniformly from its 640-unit viewBox. Below ~640px viewport
+     the scale factor drops under 0.9 and the 11-12px callout text renders at ~6px on
+     a phone (Finding 1, WO-014). Bump the in-SVG font sizes on small viewports only,
+     so desktop rendering is unchanged. CSS font-size overrides the presentation
+     attribute on the <text> elements. */
+  @media (max-width: 640px) {
+    .hero-visual svg .svg-label { font-size: 20px; }
+    .hero-visual svg .svg-value { font-size: 18px; }
   }
   section {
     margin-bottom: 40px;
@@ -202,8 +211,8 @@
   <h1>Know what site work will cost before your due-diligence window closes.</h1>
   <p class="dek">
     A parcel-specific estimate for driveway, grading, septic feasibility, and utility
-    distance on raw land in Tennessee — built from lidar elevation data and soil survey
-    data for the actual parcel, not a county average.
+    distance on raw land anywhere in the US — built from lidar elevation data and soil
+    survey data for the actual parcel, not a county average.
   </p>
 
   <div class="hero-visual">
@@ -251,26 +260,26 @@
       <!-- callout labels -->
       <g>
         <rect x="20" y="20" width="200" height="50" rx="5" fill="#fdfdfb" stroke="#ddd8cf"/>
-        <text x="32" y="42" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a">Driveway</text>
-        <text x="32" y="59" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b6b63">340 ft, 6% grade</text>
+        <text class="svg-label" x="32" y="42" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a">Driveway</text>
+        <text class="svg-value" x="32" y="59" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b6b63">340 ft, 6% grade</text>
       </g>
 
       <g>
         <rect x="410" y="20" width="200" height="50" rx="5" fill="#fdfdfb" stroke="#ddd8cf"/>
-        <text x="422" y="42" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a">Cut &amp; fill (pad)</text>
-        <text x="422" y="59" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b6b63">~180 cu yd</text>
+        <text class="svg-label" x="422" y="42" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a">Cut &amp; fill (pad)</text>
+        <text class="svg-value" x="422" y="59" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b6b63">~180 cu yd</text>
       </g>
 
       <g>
         <rect x="410" y="250" width="200" height="50" rx="5" fill="#fdfdfb" stroke="#ddd8cf"/>
-        <text x="422" y="272" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a">Nearest utility line</text>
-        <text x="422" y="289" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b6b63">210 ft from pad</text>
+        <text class="svg-label" x="422" y="272" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a">Nearest utility line</text>
+        <text class="svg-value" x="422" y="289" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b6b63">210 ft from pad</text>
       </g>
 
       <!-- sample label, on the image itself -->
       <g>
         <rect x="546" y="322" width="72" height="24" rx="4" fill="rgba(26,26,26,0.72)"/>
-        <text x="582" y="338" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#ffffff">Sample</text>
+        <text class="svg-value" x="582" y="338" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#ffffff">Sample</text>
       </g>
     </svg>
   </div>
@@ -297,18 +306,18 @@
       <li>A plain-English cost range with the two or three biggest cost drivers explained</li>
     </ul>
     <p class="fine-print">
-      Tennessee parcels only, for now. This is a screening-grade estimate meant to help
-      you decide whether to keep negotiating or walk away — not a substitute for a
-      licensed surveyor, engineer, or contractor bid. Generated from public elevation and
-      soil data (USGS, NRCS) using automated measurement plus an AI-written summary of
-      the numbers. Not an appraisal, not a perc test, not a guarantee.
+      This is a screening-grade estimate meant to help you decide whether to keep
+      negotiating or walk away — not a substitute for a licensed surveyor, engineer, or
+      contractor bid. Generated from public elevation and soil data (USGS, NRCS) using
+      automated measurement plus an AI-written summary of the numbers. Not an appraisal,
+      not a perc test, not a guarantee.
     </p>
   </section>
 
   <section>
     <h2>What a report looks like <span class="sample-tag">Sample</span></h2>
     <div class="report-preview">
-      <p class="report-parcel">Example parcel — 4.2 acres, Middle Tennessee</p>
+      <p class="report-parcel">Example parcel — 4.2 acres</p>
       <div class="report-cost">
         <div class="report-cost-label">Estimated site-work cost</div>
         <div class="report-cost-range">$38,000–$64,000</div>

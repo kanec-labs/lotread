@@ -18,8 +18,26 @@
 
 const GITHUB_API = "https://api.github.com";
 
+// RFC 5321 caps a forward-path address at 254 characters. Enforcing it here bounds
+// what can land in ops/data/lotread-submissions.json — a file agents read — closing
+// the content-injection vector in WO-014 Finding 3 (CLAUDE.md rule 9).
+const MAX_EMAIL_LENGTH = 254;
+
 function isValidEmail(email) {
-  return typeof email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  return (
+    typeof email === "string" &&
+    email.length <= MAX_EMAIL_LENGTH &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  );
+}
+
+function hasEmail(submissions, emailLower) {
+  return submissions.some(
+    (s) =>
+      s &&
+      typeof s.email === "string" &&
+      s.email.trim().toLowerCase() === emailLower
+  );
 }
 
 async function githubRequest(path, options = {}) {
@@ -122,8 +140,20 @@ module.exports = async (req, res) => {
     userAgent: req.headers["user-agent"] || null,
   };
 
+  const emailLower = email.toLowerCase();
+
   try {
     const first = await readSubmissions(owner, repo, filePath, branch);
+
+    // Dedupe: if this address is already on file, return the same response a fresh
+    // success gives and write nothing. No new commit into agent-studio, so one address
+    // cannot drive repeated writes; and because the response is identical to success,
+    // this does not become an email-enumeration oracle.
+    if (hasEmail(first.submissions, emailLower)) {
+      res.status(200).json({ ok: true });
+      return;
+    }
+
     first.submissions.push(entry);
     let writeRes = await writeSubmissions(
       owner,
@@ -138,6 +168,10 @@ module.exports = async (req, res) => {
     // Handle a stale-sha race (two submissions landing at once): re-read and retry once.
     if (writeRes.status === 409) {
       const retry = await readSubmissions(owner, repo, filePath, branch);
+      if (hasEmail(retry.submissions, emailLower)) {
+        res.status(200).json({ ok: true });
+        return;
+      }
       retry.submissions.push(entry);
       writeRes = await writeSubmissions(
         owner,
