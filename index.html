@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>LotRead — Tennessee site-work cost report (pre-launch)</title>
+<title>LotRead — Tennessee site-work cost report</title>
 <style>
   :root {
     --ink: #1a1a1a;
@@ -34,15 +34,6 @@
     font-size: 1.05rem;
     letter-spacing: 0.02em;
   }
-  .test-banner {
-    background: #f4efe2;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    padding: 12px 16px;
-    font-size: 0.9rem;
-    color: var(--muted);
-    margin-bottom: 32px;
-  }
   h1 {
     font-size: 1.9rem;
     line-height: 1.25;
@@ -53,6 +44,19 @@
     color: var(--muted);
     margin: 0 0 32px;
   }
+  .hero-visual {
+    margin: 0 0 40px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    background: #4f6b45;
+    line-height: 0;
+  }
+  .hero-visual svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
   section {
     margin-bottom: 40px;
   }
@@ -62,16 +66,57 @@
     border-bottom: 1px solid var(--line);
     padding-bottom: 8px;
   }
+  .sample-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: #f4efe2;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
   ul {
     padding-left: 20px;
     margin: 0;
   }
   li { margin-bottom: 8px; }
-  .offer-box {
+  .offer-box, .report-preview {
     border: 1px solid var(--line);
     border-radius: 8px;
     padding: 28px;
     background: #fff;
+  }
+  .report-parcel {
+    margin: 0 0 16px;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .report-cost {
+    margin-bottom: 20px;
+  }
+  .report-cost-label {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+  .report-cost-range {
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
+  .report-lines {
+    padding-left: 20px;
+    margin: 0 0 16px;
+  }
+  .report-lines li { margin-bottom: 10px; }
+  .report-note {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--muted);
   }
   .price {
     font-size: 2rem;
@@ -144,6 +189,7 @@
     font-size: 0.8rem;
     color: var(--muted);
   }
+  footer p { margin: 0; }
 </style>
 </head>
 <body>
@@ -153,18 +199,81 @@
     <div class="wordmark">LotRead</div>
   </header>
 
-  <div class="test-banner">
-    This is a pre-launch reservation page. LotRead does not exist as a working product
-    yet. We are testing whether this is worth building before we build it. Reserving a
-    spot costs nothing to try — see the refund terms below.
-  </div>
-
   <h1>Know what site work will cost before your due-diligence window closes.</h1>
   <p class="dek">
     A parcel-specific estimate for driveway, grading, septic feasibility, and utility
     distance on raw land in Tennessee — built from lidar elevation data and soil survey
     data for the actual parcel, not a county average.
   </p>
+
+  <div class="hero-visual">
+    <svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="Illustrative sample of a LotRead report map showing an example parcel boundary, a driveway path from the road to a buildable pad, and measurement callouts for driveway length and grade, cut-and-fill, and distance to the nearest utility line.">
+      <rect x="0" y="0" width="640" height="360" fill="#4f6b45"/>
+      <ellipse cx="115" cy="85" rx="95" ry="55" fill="#3c5334" opacity="0.55"/>
+      <ellipse cx="500" cy="55" rx="120" ry="48" fill="#3c5334" opacity="0.5"/>
+      <ellipse cx="205" cy="255" rx="130" ry="60" fill="#5f7a52" opacity="0.4"/>
+      <ellipse cx="555" cy="230" rx="90" ry="50" fill="#41593a" opacity="0.45"/>
+
+      <!-- road -->
+      <rect x="0" y="312" width="640" height="48" fill="#6a6255"/>
+      <line x1="0" y1="336" x2="640" y2="336" stroke="#f4efe2" stroke-width="3" stroke-dasharray="16,12"/>
+
+      <!-- parcel boundary -->
+      <polygon points="42,52 428,26 602,100 578,312 56,312" fill="none" stroke="#fdfdfb" stroke-width="3" stroke-dasharray="7,6" opacity="0.9"/>
+
+      <!-- driveway -->
+      <path d="M158,312 C176,262 218,230 258,208 C288,193 312,182 332,172" fill="none" stroke="#c9a876" stroke-width="7" stroke-linecap="round"/>
+      <path d="M158,312 C176,262 218,230 258,208 C288,193 312,182 332,172" fill="none" stroke="#fdfdfb" stroke-width="1.5" stroke-dasharray="5,7" opacity="0.6"/>
+
+      <!-- buildable pad -->
+      <rect x="298" y="150" width="72" height="46" rx="3" fill="#ddcca4" stroke="#8a7a54" stroke-width="2" transform="rotate(-8 334 173)"/>
+
+      <!-- utility line along road + pole -->
+      <line x1="0" y1="300" x2="640" y2="300" stroke="#3a352c" stroke-width="2" opacity="0.55"/>
+      <line x1="560" y1="300" x2="560" y2="272" stroke="#3a352c" stroke-width="3"/>
+      <circle cx="560" cy="270" r="4" fill="#3a352c"/>
+
+      <!-- utility distance measurement -->
+      <line x1="334" y1="173" x2="560" y2="300" stroke="#1a1a1a" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.75"/>
+      <circle cx="334" cy="173" r="4" fill="#1a1a1a"/>
+      <circle cx="560" cy="300" r="4" fill="#1a1a1a"/>
+
+      <!-- callout leaders -->
+      <line x1="258" y1="208" x2="222" y2="58" stroke="#1a1a1a" stroke-width="1.5" opacity="0.8"/>
+      <circle cx="258" cy="208" r="4" fill="#1a1a1a"/>
+
+      <line x1="334" y1="173" x2="408" y2="58" stroke="#1a1a1a" stroke-width="1.5" opacity="0.8"/>
+
+      <line x1="447" y1="236" x2="460" y2="252" stroke="#1a1a1a" stroke-width="1.5" opacity="0.8"/>
+      <circle cx="447" cy="236" r="4" fill="#1a1a1a"/>
+
+      <!-- callout labels -->
+      <g>
+        <rect x="20" y="20" width="200" height="50" rx="5" fill="#fdfdfb" stroke="#ddd8cf"/>
+        <text x="32" y="42" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a">Driveway</text>
+        <text x="32" y="59" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b6b63">340 ft, 6% grade</text>
+      </g>
+
+      <g>
+        <rect x="410" y="20" width="200" height="50" rx="5" fill="#fdfdfb" stroke="#ddd8cf"/>
+        <text x="422" y="42" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a">Cut &amp; fill (pad)</text>
+        <text x="422" y="59" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b6b63">~180 cu yd</text>
+      </g>
+
+      <g>
+        <rect x="410" y="250" width="200" height="50" rx="5" fill="#fdfdfb" stroke="#ddd8cf"/>
+        <text x="422" y="272" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a">Nearest utility line</text>
+        <text x="422" y="289" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b6b63">210 ft from pad</text>
+      </g>
+
+      <!-- sample label, on the image itself -->
+      <g>
+        <rect x="546" y="322" width="72" height="24" rx="4" fill="rgba(26,26,26,0.72)"/>
+        <text x="582" y="338" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#ffffff">Sample</text>
+      </g>
+    </svg>
+  </div>
 
   <section>
     <h2>The problem</h2>
@@ -197,14 +306,36 @@
   </section>
 
   <section>
+    <h2>What a report looks like <span class="sample-tag">Sample</span></h2>
+    <div class="report-preview">
+      <p class="report-parcel">Example parcel — 4.2 acres, Middle Tennessee</p>
+      <div class="report-cost">
+        <div class="report-cost-label">Estimated site-work cost</div>
+        <div class="report-cost-range">$38,000–$64,000</div>
+      </div>
+      <ul class="report-lines">
+        <li><strong>Driveway &amp; pad grading</strong> — $18,000–$29,000. 340 ft driveway
+          at a 6% grade; roughly 180 cu yd of cut-and-fill for a level pad.</li>
+        <li><strong>Septic system</strong> — $12,000–$22,000. Soil survey shows a
+          moderate limitation rating for this parcel.</li>
+        <li><strong>Utility connection</strong> — $6,000–$11,000. Nearest line is 210 ft
+          from the buildable pad.</li>
+      </ul>
+      <p class="report-note">
+        The full report also flags floodplain/wetland status and explains which one or
+        two line items are driving the range, in plain language.
+      </p>
+    </div>
+  </section>
+
+  <section>
     <h2>Reserve your spot</h2>
     <div class="offer-box">
       <div class="price">$49</div>
       <p class="price-note">One-time, one parcel. Not a subscription.</p>
       <p class="fine-print">
-        Leave your email — we'll notify you when this launches, and honor $49 for your
-        first report. No payment is collected now; this page is a pre-launch demand
-        test, not a working checkout. If we don't ship, we'll tell you.
+        Leave your email and we'll notify you when this is ready, and honor $49 for your
+        first report. No payment is collected now.
       </p>
       <form id="reserve-form" class="email-form" novalidate>
         <label for="reserve-email" class="hp-field">Email</label>
@@ -228,10 +359,7 @@
   </section>
 
   <footer>
-    <p>
-      LotRead is a pre-launch project. No report has shipped yet. We're testing whether
-      enough people want this before we build it.
-    </p>
+    <p>LotRead is in early development.</p>
   </footer>
 
 </div>
@@ -245,6 +373,7 @@
     var form = document.getElementById("reserve-form");
     var submitBtn = document.getElementById("reserve-submit");
     var note = document.getElementById("cta-note");
+    var BETA_MESSAGE = "We're still in beta — we've registered your interest and will reach out again when the product is ready.";
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -253,9 +382,11 @@
       var email = emailField.value.trim();
 
       if (hp.value) {
+        // Honeypot tripped: show the same success state a real submitter would see,
+        // so a bot (or anyone inspecting behavior) can't distinguish this path.
         note.classList.remove("error");
         note.classList.add("success");
-        note.textContent = "Thanks -- we'll be in touch at launch.";
+        note.textContent = BETA_MESSAGE;
         form.reset();
         return;
       }
@@ -280,7 +411,7 @@
         .then(function (result) {
           if (result.ok && result.data && result.data.ok) {
             note.classList.add("success");
-            note.textContent = "Thanks -- we'll notify you at launch and honor $49.";
+            note.textContent = BETA_MESSAGE;
             form.reset();
           } else {
             throw new Error("submit failed");
