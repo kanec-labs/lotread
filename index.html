@@ -237,32 +237,14 @@
 </div>
 
 <script>
-  // Swap point for going live: this page uses Web3Forms (web3forms.com) as the email-
-  // capture backend — a free-tier, static-site-friendly "form to email" service. No
-  // Stripe or other payment-processing account exists or is referenced anywhere in
-  // this file. The Web3Forms access key is NOT a payment credential and is not secret:
-  // Web3Forms designs it to be embedded in public client-side code (it only routes a
-  // submission to a destination email; it cannot read or move money). It still isn't
-  // hardcoded here because no Web3Forms account exists yet — see README.md for the
-  // one-time setup step. Once created, replace the placeholder below with the real key
-  // (referenced as env:WEB3FORMS_ACCESS_KEY at deploy time, baked into this static file
-  // at deploy since there is no server-side templating step here).
-  var WEB3FORMS_ACCESS_KEY = "REPLACE_WITH_WEB3FORMS_ACCESS_KEY";
-  var WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
-
+  // Reservations are recorded server-side by /api/reserve.js, which commits each
+  // submission into kanec-labs/agent-studio (private) via the GitHub API -- see D-015 in
+  // that repo's company/DECISIONS.md. No Web3Forms, no Stripe, no payment credential of
+  // any kind is referenced anywhere in this file.
   document.addEventListener("DOMContentLoaded", function () {
     var form = document.getElementById("reserve-form");
     var submitBtn = document.getElementById("reserve-submit");
     var note = document.getElementById("cta-note");
-    var notConfigured = !WEB3FORMS_ACCESS_KEY || WEB3FORMS_ACCESS_KEY.indexOf("REPLACE_WITH") === 0;
-
-    if (notConfigured) {
-      submitBtn.disabled = true;
-      submitBtn.classList.add("disabled");
-      note.textContent = "Reservations aren't open yet — this page is a pre-launch test.";
-      form.addEventListener("submit", function (e) { e.preventDefault(); });
-      return;
-    }
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -271,10 +253,9 @@
       var email = emailField.value.trim();
 
       if (hp.value) {
-        // Honeypot tripped — pretend success, do not call the API, do not tip off the bot.
         note.classList.remove("error");
         note.classList.add("success");
-        note.textContent = "Thanks — we'll be in touch at launch.";
+        note.textContent = "Thanks -- we'll be in touch at launch.";
         form.reset();
         return;
       }
@@ -286,26 +267,20 @@
       }
 
       submitBtn.disabled = true;
-      submitBtn.textContent = "Sending…";
+      submitBtn.textContent = "Sending...";
       note.classList.remove("error", "success");
       note.textContent = "";
 
-      fetch(WEB3FORMS_ENDPOINT, {
+      fetch("/api/reserve", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify({
-          access_key: WEB3FORMS_ACCESS_KEY,
-          subject: "LotRead WTP smoke test — reservation",
-          from_name: "LotRead WTP page",
-          email: email,
-          message: "Reserved at $49 on the LotRead pre-launch WTP smoke test page."
-        })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email, botcheck: hp.value })
       })
         .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
         .then(function (result) {
-          if (result.ok && result.data && result.data.success) {
+          if (result.ok && result.data && result.data.ok) {
             note.classList.add("success");
-            note.textContent = "Thanks — we'll notify you at launch and honor $49.";
+            note.textContent = "Thanks -- we'll notify you at launch and honor $49.";
             form.reset();
           } else {
             throw new Error("submit failed");
@@ -313,7 +288,7 @@
         })
         .catch(function () {
           note.classList.add("error");
-          note.textContent = "Something went wrong — please try again in a moment.";
+          note.textContent = "Something went wrong -- please try again in a moment.";
         })
         .finally(function () {
           submitBtn.disabled = false;
