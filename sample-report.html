@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Sample report — LotRead</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{
+  --paper:#F6F6F1;
+  --paper-raised:#FFFFFF;
+  --ink:#1E2620;
+  --ink-soft:#4B5148;
+  --line:#D9DACE;
+  --forest:#3B5D42;
+  --forest-deep:#2A4331;
+  --clay:#95643C;
+  --clay-soft:#C99A6B;
+  --water:#4F7385;
+  --water-soft:#DCE6EA;
+  --tag-bg:#EDE7D8;
+  --tag-ink:#6B4E28;
+  --shadow: 0 1px 2px rgba(30,38,32,0.06), 0 6px 20px rgba(30,38,32,0.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#161B16;
+    --paper-raised:#1C221C;
+    --ink:#E9ECE4;
+    --ink-soft:#AFB6A8;
+    --line:#333B31;
+    --forest:#7FA687;
+    --forest-deep:#9CC0A2;
+    --clay:#D3A06E;
+    --clay-soft:#8A6339;
+    --water:#8FB4C4;
+    --water-soft:#233238;
+    --tag-bg:#2A2A1E;
+    --tag-ink:#D3B586;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 6px 24px rgba(0,0,0,0.35);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#161B16;
+  --paper-raised:#1C221C;
+  --ink:#E9ECE4;
+  --ink-soft:#AFB6A8;
+  --line:#333B31;
+  --forest:#7FA687;
+  --forest-deep:#9CC0A2;
+  --clay:#D3A06E;
+  --clay-soft:#8A6339;
+  --water:#8FB4C4;
+  --water-soft:#233238;
+  --tag-bg:#2A2A1E;
+  --tag-ink:#D3B586;
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 6px 24px rgba(0,0,0,0.35);
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Public Sans", ui-sans-serif, system-ui, sans-serif;
+  padding:0 20px;
+  -webkit-font-smoothing:antialiased;
+}
+.page{
+  max-width:760px;
+  margin:0 auto;
+  padding-block:36px 64px;
+}
+h1,h2,h3{
+  font-family:"Source Serif 4", Georgia, serif;
+  font-weight:600;
+  text-wrap:balance;
+  color:var(--ink);
+  margin:0;
+}
+p{ margin:0; line-height:1.6; color:var(--ink); max-width:34em; }
+.mono{ font-family:"IBM Plex Mono", ui-monospace, monospace; font-variant-numeric:tabular-nums; }
+a{ color:var(--forest-deep); }
+
+/* ---------- Back nav ---------- */
+.back-nav{
+  display:inline-block;
+  margin-bottom:22px;
+  font-family:"IBM Plex Mono", monospace;
+  font-size:0.8rem;
+  text-decoration:none;
+  color:var(--ink-soft);
+}
+.back-nav:hover{ color:var(--forest-deep); }
+
+/* ---------- Header ---------- */
+.masthead{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:16px;
+  padding-bottom:18px;
+  border-bottom:2px solid var(--forest);
+  flex-wrap:wrap;
+}
+.masthead-left{ display:flex; flex-direction:column; gap:6px; }
+.eyebrow{
+  font-family:"IBM Plex Mono", monospace;
+  font-size:0.72rem;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+}
+.title{ font-size:1.7rem; line-height:1.15; }
+.subline{ font-size:0.95rem; color:var(--ink-soft); }
+.identifiers{
+  display:flex;
+  flex-wrap:wrap;
+  gap:4px 16px;
+  font-family:"IBM Plex Mono", monospace;
+  font-size:0.78rem;
+  color:var(--ink-soft);
+}
+.identifiers span b{
+  color:var(--ink);
+  font-weight:600;
+}
+
+/* ---------- Facts strip ---------- */
+.facts-scroll{
+  overflow-x:auto;
+  margin-top:22px;
+  border:1px solid var(--line);
+  border-radius:4px;
+  position:relative;
+}
+/* Below ~620px the 5-column grid (min 120px each) no longer fits and this strip
+   scrolls internally rather than the page. A fade + label on the right edge signals
+   there's more to see so "Build grade" / "Est. site cost" aren't silently missed on
+   a phone (same class of mobile-legibility risk QSE flagged in WO-014, different
+   cause: scroll discoverability rather than illegible text). Desktop widths never
+   trigger the scroll, so the hint is scoped to the breakpoint where it applies. */
+@media (max-width:620px){
+  .facts-scroll::after{
+    content:"";
+    position:absolute;
+    top:0; right:0; bottom:0;
+    width:28px;
+    background:linear-gradient(to right, transparent, var(--paper-raised));
+    pointer-events:none;
+  }
+}
+.facts{
+  display:grid;
+  grid-template-columns:repeat(5, minmax(120px,1fr));
+  gap:1px;
+  background:var(--line);
+  width:100%;
+}
+.fact{
+  background:var(--paper-raised);
+  padding:12px 14px;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+.fact .k{ font-size:0.68rem; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink-soft); white-space:nowrap; }
+.fact .v{ font-family:"IBM Plex Mono", monospace; font-size:1.02rem; font-weight:600; white-space:nowrap; }
+.fact.grade{ background:var(--tag-bg); }
+.fact.grade .v{ color:var(--forest-deep); font-size:1.3rem; font-weight:700; }
+
+/* ---------- Site sketch ---------- */
+.sketch-wrap{
+  margin-top:26px;
+  background:var(--paper-raised);
+  border:1px solid var(--line);
+  border-radius:6px;
+  box-shadow:var(--shadow);
+  padding:18px 18px 10px;
+}
+.sketch-cap{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  margin-bottom:8px;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.sketch-cap .name{ font-size:0.82rem; font-weight:600; color:var(--ink-soft); font-family:"IBM Plex Mono",monospace; letter-spacing:0.02em; }
+.sketch-cap .note{ font-size:0.78rem; color:var(--ink-soft); }
+svg text{ font-family:"IBM Plex Mono", monospace; }
+.site-map-link{ display:block; line-height:0; }
+.site-map{
+  display:block;
+  width:100%;
+  height:auto;
+  border-radius:3px;
+}
+.zoom-hint{
+  margin-top:8px;
+  font-size:0.76rem;
+  color:var(--ink-soft);
+  text-align:right;
+}
+
+/* ---------- Section rhythm ---------- */
+section{ margin-top:44px; }
+.section-head{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+  margin-bottom:14px;
+  border-bottom:1px solid var(--line);
+  padding-bottom:8px;
+}
+.section-num{
+  font-family:"IBM Plex Mono", monospace;
+  font-size:0.78rem;
+  color:var(--forest);
+  min-width:1.6em;
+}
+h2{ font-size:1.28rem; }
+
+/* ---------- Bottom line ---------- */
+.bottom-line{
+  background:var(--paper-raised);
+  border:1px solid var(--line);
+  border-left:4px solid var(--forest);
+  border-radius:0 6px 6px 0;
+  padding:20px 22px;
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.range-display{
+  font-family:"IBM Plex Mono", monospace;
+  font-size:2rem;
+  font-weight:600;
+  color:var(--forest-deep);
+  line-height:1;
+}
+.range-caption{ font-size:0.78rem; color:var(--ink-soft); letter-spacing:0.02em; }
+.aside-note{
+  font-size:0.88rem;
+  color:var(--ink-soft);
+  border-top:1px solid var(--line);
+  padding-top:10px;
+}
+
+/* ---------- Findings ---------- */
+.finding{
+  display:grid;
+  grid-template-columns:180px 1fr;
+  gap:18px;
+  padding:18px 0;
+  border-bottom:1px solid var(--line);
+}
+.finding:last-child{ border-bottom:none; }
+.finding-label{
+  font-family:"IBM Plex Mono", monospace;
+  font-size:0.78rem;
+  letter-spacing:0.02em;
+  color:var(--ink-soft);
+  padding-top:2px;
+}
+.finding-value{ font-weight:600; color:var(--ink); font-size:0.98rem; margin-top:3px; font-family:"Public Sans", sans-serif; }
+.finding-body p + p{ margin-top:8px; }
+/* Grid items default to min-width:auto, which lets a wide child (the cost table
+   below) push this item, and with it the whole page, wider than the viewport
+   instead of scrolling internally in its own .cost-table-scroll. min-width:0 lets
+   the item shrink to its grid track so the nested scroll container does its job. */
+.finding-body{ min-width:0; }
+@media (max-width:560px){
+  .finding{ grid-template-columns:1fr; gap:6px; }
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  font-size:0.72rem;
+  letter-spacing:0.03em;
+  text-transform:uppercase;
+  padding:3px 8px;
+  border-radius:3px;
+  font-family:"IBM Plex Mono", monospace;
+}
+.badge.moderate{ background:var(--water-soft); color:var(--water); }
+.badge.clear{ background:rgba(59,93,66,0.12); color:var(--forest-deep); }
+.badge.flag{ background:var(--tag-bg); color:var(--tag-ink); }
+
+/* ---------- Cost table ---------- */
+.cost-table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:6px;
+  font-size:0.92rem;
+}
+.cost-table th{
+  text-align:left;
+  font-family:"IBM Plex Mono", monospace;
+  font-size:0.68rem;
+  letter-spacing:0.05em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  padding:0 10px 8px 0;
+  border-bottom:1px solid var(--line);
+}
+.cost-table td{
+  padding:10px 10px 10px 0;
+  border-bottom:1px solid var(--line);
+  vertical-align:top;
+}
+.cost-table td.amt{
+  font-family:"IBM Plex Mono", monospace;
+  font-weight:600;
+  white-space:nowrap;
+  text-align:right;
+  color:var(--forest-deep);
+}
+.cost-table td.item{ font-weight:600; }
+.cost-table td.desc{ color:var(--ink-soft); font-size:0.88rem; }
+.cost-table tfoot td{ border-bottom:none; border-top:2px solid var(--forest); font-weight:700; padding-top:12px; }
+.cost-table tfoot td.amt{ font-size:1.05rem; }
+.cost-table-scroll{ overflow-x:auto; position:relative; }
+@media (max-width:620px){
+  .cost-table-scroll::after{
+    content:"";
+    position:absolute;
+    top:0; right:0; bottom:0;
+    width:20px;
+    background:linear-gradient(to right, transparent, var(--paper-raised));
+    pointer-events:none;
+  }
+}
+
+.drivers{ margin-top:22px; display:flex; flex-direction:column; gap:14px; }
+.driver{ display:flex; gap:12px; }
+.driver-rank{
+  font-family:"IBM Plex Mono", monospace;
+  color:var(--clay);
+  font-weight:600;
+  font-size:0.95rem;
+  min-width:1.4em;
+}
+
+/* ---------- Not-a list ---------- */
+.not-list{ display:flex; flex-direction:column; gap:10px; margin-top:4px; }
+.not-item{ display:flex; gap:10px; align-items:flex-start; }
+.not-item svg{ flex:none; margin-top:4px; }
+
+/* ---------- Next steps ---------- */
+.steps{ display:flex; flex-direction:column; gap:0; margin-top:4px; }
+.step{
+  display:grid;
+  grid-template-columns:28px 1fr;
+  gap:12px;
+  padding:14px 0;
+  border-bottom:1px solid var(--line);
+}
+.step:last-child{ border-bottom:none; }
+.step-check{
+  width:20px; height:20px;
+  border:1.5px solid var(--forest);
+  border-radius:4px;
+  margin-top:1px;
+}
+.step-title{ font-weight:600; margin-bottom:2px; }
+.step-body{ color:var(--ink-soft); font-size:0.92rem; }
+
+/* ---------- Footer ---------- */
+footer{
+  margin-top:52px;
+  padding-top:18px;
+  border-top:1px solid var(--line);
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  font-size:0.8rem;
+  color:var(--ink-soft);
+}
+footer .brand{ font-family:"IBM Plex Mono", monospace; color:var(--forest); letter-spacing:0.02em; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <a class="back-nav" href="index.html">&larr; Back to LotRead</a>
+
+  <div class="masthead">
+    <div class="masthead-left">
+      <div class="eyebrow">Lotread Site Screening Report · Sample</div>
+      <h1 class="title">Cedar Hollow &mdash; 4.2&nbsp;acres, wooded upland</h1>
+      <div class="subline">Frontage on a two-lane public road &middot; report generated Sept 13, 2026</div>
+      <div class="identifiers">
+        <span>Parcel ID (APN): <b>14-22-300-014</b></span>
+        <span>Municipality: <b>Cedar Township, Wexford County</b></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="facts-scroll">
+    <div class="facts">
+      <div class="fact"><div class="k">Parcel size</div><div class="v mono">4.2 ac</div></div>
+      <div class="fact"><div class="k">Road frontage</div><div class="v mono">~250 ft</div></div>
+      <div class="fact"><div class="k">Pad grade</div><div class="v mono">~4% avg</div></div>
+      <div class="fact grade"><div class="k">Build grade</div><div class="v mono">B+</div></div>
+      <div class="fact"><div class="k">Est. site cost</div><div class="v mono">$33k&ndash;72k</div></div>
+    </div>
+  </div>
+
+  <div class="sketch-wrap">
+    <div class="sketch-cap">
+      <span class="name">SITE MAP — AERIAL IMAGERY WITH CONTOURS</span>
+      <span class="note">10 ft contour interval, north up, approximate annotations</span>
+    </div>
+    <a class="site-map-link" href="site-map.png" target="_blank" rel="noopener" aria-label="Open full-size site map image in a new tab">
+      <img class="site-map" src="site-map.png" alt="Annotated aerial map of the parcel showing the boundary, contour lines, recommended driveway route and house pad, nearest electric line, and a flagged possible wetland along the creek to the north" />
+    </a>
+    <div class="zoom-hint">Tap the map to view full size</div>
+  </div>
+
+  <!-- 1. BOTTOM LINE -->
+  <section>
+    <div class="section-head"><span class="section-num">01</span><h2>The bottom line</h2></div>
+    <div class="bottom-line">
+      <div>
+        <div class="range-display mono">$33,000&ndash;$72,000</div>
+        <div class="range-caption">Estimated cost to get this lot road-ready and buildable, before a house is built</div>
+      </div>
+      <p>This is a workable lot, not a difficult one, but it is not a cheap one either. The range is wide because the biggest line item &mdash; septic &mdash; will not be settled until a perc test is done. If you are negotiating price, use the low end as your floor and the high end as your walk-away number: at $33,000 in site work this is an easy yes, at $72,000 you are effectively paying for a second driveway and an engineered septic system, and the deal should be priced accordingly. A well and any permit or impact fees are separate costs on top of this range, not included in it.</p>
+      <div class="aside-note">This estimate covers driveway, pad, septic, and utility connection only. Water supply (a private well) and permitting are priced separately below.</div>
+    </div>
+  </section>
+
+  <!-- 2. WHAT WE LOOKED AT -->
+  <section>
+    <div class="section-head"><span class="section-num">02</span><h2>What we looked at</h2></div>
+
+    <div class="finding">
+      <div class="finding-label">DRIVEWAY</div>
+      <div class="finding-body">
+        <div class="finding-value">~360 ft, 8% average grade</div>
+        <p>The one usable entrance sits near the front corner. From there the drive climbs about 360 ft to the bench at an average grade of roughly 8%, with one steeper pitch near 12%. It also crosses a small swale, which will need a culvert. That combination &mdash; length, grade, and a drainage crossing &mdash; is why this is real earthwork rather than a short flat driveway.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <div class="finding-label">PAD EARTHWORK</div>
+      <div class="finding-body">
+        <div class="finding-value">~400 cu yd cut-and-fill</div>
+        <p>The bench itself is about 0.4 acres of gentler ground, wooded, with room for a house pad on the order of 60 ft by 80 ft. Leveling it is roughly balanced cut-and-fill &mdash; about 400 cubic yards moved, with the spoil staying on site rather than needing to be trucked away.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <div class="finding-label">SEPTIC</div>
+      <div class="finding-body">
+        <div class="finding-value"><span class="badge moderate">Somewhat limited</span></div>
+        <p>The soil survey rates the bench area &ldquo;somewhat limited&rdquo; for a conventional septic system &mdash; a moderate limitation, mostly from slope and a shallow depth to a restrictive layer. That is not a red flag by itself. A conventional trench system may still work; a perc test is what will tell you, and it can also push the design toward an engineered or alternative system if the ground doesn't drain the way the soil map suggests.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <div class="finding-label">UTILITY DISTANCE</div>
+      <div class="finding-body">
+        <div class="finding-value">~280 ft to nearest connection</div>
+        <p>Overhead electric runs along the road. The nearest connection point to the pad is about 280 ft. Water is assumed to come from a private well, since there is no water line to tie into &mdash; the well itself is priced separately below, not folded into the site-work range.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <div class="finding-label">FLOODPLAIN &amp; WETLAND</div>
+      <div class="finding-body">
+        <div class="finding-value"><span class="badge clear">Building area clear</span> <span class="badge flag">Field check flagged</span></div>
+        <p>The parcel sits outside the FEMA-mapped 100-year floodplain. The National Wetlands Inventory does show a possible forested wetland along the drainage in the far corner, about 150 ft from the pad at its closest. The building envelope itself is clear, but that wetland line is drawn from remote data and is worth confirming on the ground before you rely on it.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <div class="finding-label">COST RANGE</div>
+      <div class="finding-body">
+        <div class="finding-value">$33,000&ndash;$72,000 total</div>
+        <p>The itemized figures below are approximate and meant to bracket the job, not price it to the dollar.</p>
+
+        <div class="cost-table-scroll">
+          <table class="cost-table">
+            <thead>
+              <tr><th>Item</th><th>What it covers</th><th style="text-align:right;">Estimate</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="item">Driveway</td>
+                <td class="desc">Clearing, rough grading, culvert, compacted gravel</td>
+                <td class="amt">$12,000&ndash;24,000</td>
+              </tr>
+              <tr>
+                <td class="item">Pad preparation</td>
+                <td class="desc">Clearing ~0.4 acre, ~400 cu yd cut-and-fill, rough grading</td>
+                <td class="amt">$7,000&ndash;15,000</td>
+              </tr>
+              <tr>
+                <td class="item">Septic system</td>
+                <td class="desc">Conventional trench if perc passes; upper end if engineered/alternative is required</td>
+                <td class="amt">$9,000&ndash;22,000</td>
+              </tr>
+              <tr>
+                <td class="item">Utility connection</td>
+                <td class="desc">Electric service, ~280 ft, trench or overhead extension, meter and hookup</td>
+                <td class="amt">$5,000&ndash;11,000</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr><td colspan="2">Total estimated site work</td><td class="amt">$33,000&ndash;72,000</td></tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="drivers">
+          <div class="driver">
+            <div class="driver-rank mono">1</div>
+            <p><strong>Septic uncertainty.</strong> The $9,000&ndash;$22,000 range is the widest single swing in the estimate. A perc test is the one check that narrows it &mdash; everything else here is a smaller range for a reason.</p>
+          </div>
+          <div class="driver">
+            <div class="driver-rank mono">2</div>
+            <p><strong>The driveway.</strong> 360 ft at an 8% average grade, with a steeper stretch and a culvert crossing, is enough earthwork that a driveway bid can move the total more than people expect.</p>
+          </div>
+          <div class="driver">
+            <div class="driver-rank mono">3</div>
+            <p><strong>Pad earthwork and clearing.</strong> The bench is usable, but it is sloped and wooded, so leveling it is a real line item rather than an afterthought.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. WHAT THIS REPORT IS NOT -->
+  <section>
+    <div class="section-head"><span class="section-num">03</span><h2>What this report is not</h2></div>
+    <p style="margin-bottom:14px;">This report is a screening tool. It is built from public elevation and soil data, run through automated measurement and summarized in plain language by an AI. It is meant to tell you whether a lot is worth pursuing and roughly what to budget &mdash; not to be the final word on any of it.</p>
+    <div class="not-list">
+      <div class="not-item">
+        <svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="var(--clay)" stroke-width="1.5"/><path d="M8 4v5" stroke="var(--clay)" stroke-width="1.5"/><circle cx="8" cy="11.2" r="0.9" fill="var(--clay)"/></svg>
+        <p>It is not a licensed survey. Boundaries, acreage, and frontage here are approximate, not surveyed.</p>
+      </div>
+      <div class="not-item">
+        <svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="var(--clay)" stroke-width="1.5"/><path d="M8 4v5" stroke="var(--clay)" stroke-width="1.5"/><circle cx="8" cy="11.2" r="0.9" fill="var(--clay)"/></svg>
+        <p>It is not a site or civil engineer's design for the driveway, pad, or drainage.</p>
+      </div>
+      <div class="not-item">
+        <svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="var(--clay)" stroke-width="1.5"/><path d="M8 4v5" stroke="var(--clay)" stroke-width="1.5"/><circle cx="8" cy="11.2" r="0.9" fill="var(--clay)"/></svg>
+        <p>It is not a contractor's bid. The cost ranges are estimates for budgeting, not quotes you can hold anyone to.</p>
+      </div>
+      <div class="not-item">
+        <svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="var(--clay)" stroke-width="1.5"/><path d="M8 4v5" stroke="var(--clay)" stroke-width="1.5"/><circle cx="8" cy="11.2" r="0.9" fill="var(--clay)"/></svg>
+        <p>It is not a perc test. The septic rating is a soil-survey estimate, not a field measurement of how the ground actually drains.</p>
+      </div>
+      <div class="not-item">
+        <svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="var(--clay)" stroke-width="1.5"/><path d="M8 4v5" stroke="var(--clay)" stroke-width="1.5"/><circle cx="8" cy="11.2" r="0.9" fill="var(--clay)"/></svg>
+        <p>It is not an appraisal. Nothing here speaks to what the lot is worth, only what it may cost to prepare.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. WHAT TO DO NEXT -->
+  <section>
+    <div class="section-head"><span class="section-num">04</span><h2>What to do next</h2></div>
+    <p style="margin-bottom:6px;">None of this is a reason to skip the usual checks before closing &mdash; it is a map of which ones matter most here.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-check"></div>
+        <div>
+          <div class="step-title">Order a perc test on the bench</div>
+          <div class="step-body">This resolves the biggest swing in the estimate and tells you whether a conventional septic system will work.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-check"></div>
+        <div>
+          <div class="step-title">Get one or two contractor walk-throughs</div>
+          <div class="step-body">Ask for bids on the driveway and pad specifically &mdash; grade and access are easier to judge in person than from any report.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-check"></div>
+        <div>
+          <div class="step-title">Confirm the wetland line in the far corner</div>
+          <div class="step-body">Check with the relevant agency or hire a wetland consultant to walk the drainage area before you assume the buffer.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-check"></div>
+        <div>
+          <div class="step-title">Get a utility connection quote</div>
+          <div class="step-body">Ask the electric provider to price the ~280 ft extension to the pad.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-check"></div>
+        <div>
+          <div class="step-title">Price a well</div>
+          <div class="step-body">Not included in the range above &mdash; get a local well driller's estimate before you finalize your budget.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div><span class="brand">lotread</span> &middot; Sample report for illustration only &mdash; parcel, measurements, and prices shown are not from a real property.</div>
+    <div>Generated from public elevation (USGS) and soil survey (NRCS) data using automated measurement, summarized by AI. Verify with the professionals noted above before making a purchase decision.</div>
+  </footer>
+
+</div>
+</body>
+</html>

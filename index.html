@@ -44,28 +44,6 @@
     color: var(--muted);
     margin: 0 0 32px;
   }
-  .hero-visual {
-    margin: 0 0 40px;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    overflow: hidden;
-    background: #4f6b45;
-    line-height: 0;
-  }
-  .hero-visual svg {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-  /* The hero SVG scales uniformly from its 640-unit viewBox. Below ~640px viewport
-     the scale factor drops under 0.9 and the 11-12px callout text renders at ~6px on
-     a phone (Finding 1, WO-014). Bump the in-SVG font sizes on small viewports only,
-     so desktop rendering is unchanged. CSS font-size overrides the presentation
-     attribute on the <text> elements. */
-  @media (max-width: 640px) {
-    .hero-visual svg .svg-label { font-size: 20px; }
-    .hero-visual svg .svg-value { font-size: 18px; }
-  }
   section {
     margin-bottom: 40px;
   }
@@ -123,9 +101,55 @@
   }
   .report-lines li { margin-bottom: 10px; }
   .report-note {
-    margin: 0;
+    margin: 0 0 20px;
     font-size: 0.9rem;
     color: var(--muted);
+  }
+  .report-map-link {
+    display: block;
+    line-height: 0;
+    margin: 0 0 16px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .report-map-link img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .report-facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    margin: 0 0 20px;
+    padding: 14px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .report-fact {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 90px;
+  }
+  .report-fact-k {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--muted);
+  }
+  .report-fact-v {
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .report-cta {
+    display: inline-block;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--accent);
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 1px;
   }
   .price {
     font-size: 2rem;
@@ -215,75 +239,6 @@
     survey data for the actual parcel, not a county average.
   </p>
 
-  <div class="hero-visual">
-    <svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" role="img"
-         aria-label="Illustrative sample of a LotRead report map showing an example parcel boundary, a driveway path from the road to a buildable pad, and measurement callouts for driveway length and grade, cut-and-fill, and distance to the nearest utility line.">
-      <rect x="0" y="0" width="640" height="360" fill="#4f6b45"/>
-      <ellipse cx="115" cy="85" rx="95" ry="55" fill="#3c5334" opacity="0.55"/>
-      <ellipse cx="500" cy="55" rx="120" ry="48" fill="#3c5334" opacity="0.5"/>
-      <ellipse cx="205" cy="255" rx="130" ry="60" fill="#5f7a52" opacity="0.4"/>
-      <ellipse cx="555" cy="230" rx="90" ry="50" fill="#41593a" opacity="0.45"/>
-
-      <!-- road -->
-      <rect x="0" y="312" width="640" height="48" fill="#6a6255"/>
-      <line x1="0" y1="336" x2="640" y2="336" stroke="#f4efe2" stroke-width="3" stroke-dasharray="16,12"/>
-
-      <!-- parcel boundary -->
-      <polygon points="42,52 428,26 602,100 578,312 56,312" fill="none" stroke="#fdfdfb" stroke-width="3" stroke-dasharray="7,6" opacity="0.9"/>
-
-      <!-- driveway -->
-      <path d="M158,312 C176,262 218,230 258,208 C288,193 312,182 332,172" fill="none" stroke="#c9a876" stroke-width="7" stroke-linecap="round"/>
-      <path d="M158,312 C176,262 218,230 258,208 C288,193 312,182 332,172" fill="none" stroke="#fdfdfb" stroke-width="1.5" stroke-dasharray="5,7" opacity="0.6"/>
-
-      <!-- buildable pad -->
-      <rect x="298" y="150" width="72" height="46" rx="3" fill="#ddcca4" stroke="#8a7a54" stroke-width="2" transform="rotate(-8 334 173)"/>
-
-      <!-- utility line along road + pole -->
-      <line x1="0" y1="300" x2="640" y2="300" stroke="#3a352c" stroke-width="2" opacity="0.55"/>
-      <line x1="560" y1="300" x2="560" y2="272" stroke="#3a352c" stroke-width="3"/>
-      <circle cx="560" cy="270" r="4" fill="#3a352c"/>
-
-      <!-- utility distance measurement -->
-      <line x1="334" y1="173" x2="560" y2="300" stroke="#1a1a1a" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.75"/>
-      <circle cx="334" cy="173" r="4" fill="#1a1a1a"/>
-      <circle cx="560" cy="300" r="4" fill="#1a1a1a"/>
-
-      <!-- callout leaders -->
-      <line x1="258" y1="208" x2="222" y2="58" stroke="#1a1a1a" stroke-width="1.5" opacity="0.8"/>
-      <circle cx="258" cy="208" r="4" fill="#1a1a1a"/>
-
-      <line x1="334" y1="173" x2="408" y2="58" stroke="#1a1a1a" stroke-width="1.5" opacity="0.8"/>
-
-      <line x1="447" y1="236" x2="460" y2="252" stroke="#1a1a1a" stroke-width="1.5" opacity="0.8"/>
-      <circle cx="447" cy="236" r="4" fill="#1a1a1a"/>
-
-      <!-- callout labels -->
-      <g>
-        <rect x="20" y="20" width="200" height="50" rx="5" fill="#fdfdfb" stroke="#ddd8cf"/>
-        <text class="svg-label" x="32" y="42" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a">Driveway</text>
-        <text class="svg-value" x="32" y="59" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b6b63">340 ft, 6% grade</text>
-      </g>
-
-      <g>
-        <rect x="410" y="20" width="200" height="50" rx="5" fill="#fdfdfb" stroke="#ddd8cf"/>
-        <text class="svg-label" x="422" y="42" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a">Cut &amp; fill (pad)</text>
-        <text class="svg-value" x="422" y="59" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b6b63">~180 cu yd</text>
-      </g>
-
-      <g>
-        <rect x="410" y="250" width="200" height="50" rx="5" fill="#fdfdfb" stroke="#ddd8cf"/>
-        <text class="svg-label" x="422" y="272" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a">Nearest utility line</text>
-        <text class="svg-value" x="422" y="289" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b6b63">210 ft from pad</text>
-      </g>
-
-      <!-- sample label, on the image itself -->
-      <g>
-        <rect x="546" y="322" width="72" height="24" rx="4" fill="rgba(26,26,26,0.72)"/>
-        <text class="svg-value" x="582" y="338" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#ffffff">Sample</text>
-      </g>
-    </svg>
-  </div>
-
   <section>
     <h2>The problem</h2>
     <p>
@@ -317,23 +272,30 @@
   <section>
     <h2>What a report looks like <span class="sample-tag">Sample</span></h2>
     <div class="report-preview">
-      <p class="report-parcel">Example parcel — 4.2 acres</p>
+      <p class="report-parcel">Cedar Hollow — 4.2 acres, wooded upland</p>
+
+      <a class="report-map-link" href="sample-report.html" aria-label="Open the full sample report">
+        <img src="site-map.png" alt="Annotated aerial map of the sample parcel showing the boundary, contour lines, recommended driveway route and house pad, nearest electric line, and a flagged possible wetland" loading="lazy">
+      </a>
+
       <div class="report-cost">
         <div class="report-cost-label">Estimated site-work cost</div>
-        <div class="report-cost-range">$38,000–$64,000</div>
+        <div class="report-cost-range">$33,000–$72,000</div>
       </div>
-      <ul class="report-lines">
-        <li><strong>Driveway &amp; pad grading</strong> — $18,000–$29,000. 340 ft driveway
-          at a 6% grade; roughly 180 cu yd of cut-and-fill for a level pad.</li>
-        <li><strong>Septic system</strong> — $12,000–$22,000. Soil survey shows a
-          moderate limitation rating for this parcel.</li>
-        <li><strong>Utility connection</strong> — $6,000–$11,000. Nearest line is 210 ft
-          from the buildable pad.</li>
-      </ul>
+
+      <div class="report-facts">
+        <div class="report-fact"><span class="report-fact-k">Road frontage</span><span class="report-fact-v">~250 ft</span></div>
+        <div class="report-fact"><span class="report-fact-k">Driveway</span><span class="report-fact-v">~360 ft, 8% grade</span></div>
+        <div class="report-fact"><span class="report-fact-k">Build grade</span><span class="report-fact-v">B+</span></div>
+      </div>
+
       <p class="report-note">
-        The full report also flags floodplain/wetland status and explains which one or
-        two line items are driving the range, in plain language.
+        The full report walks through the driveway, pad earthwork, septic feasibility,
+        utility distance, and floodplain/wetland status for this parcel, then explains
+        which line items are driving the cost range and what to check next.
       </p>
+
+      <a class="report-cta" href="sample-report.html">View the full sample report &rarr;</a>
     </div>
   </section>
 
