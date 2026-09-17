@@ -3,8 +3,72 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
-<title>LotRead — site-work cost report (pre-launch)</title>
+<meta name="robots" content="index, follow">
+<title>LotRead — Instant Site-Work Cost Estimate for Any Parcel of Land</title>
+<meta name="description" content="Get an instant, parcel-specific site-work cost estimate — driveway grading, septic feasibility, utility distance — before your land due-diligence window closes.">
+<link rel="canonical" href="https://lotread.vercel.app/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "name": "LotRead",
+      "url": "https://lotread.vercel.app/"
+    },
+    {
+      "@type": "Service",
+      "name": "LotRead Site-Work Cost Report",
+      "description": "An instant, parcel-specific site-work cost report for raw land anywhere in the US, covering driveway grading, cut-and-fill volume, septic feasibility, and utility distance, built from public elevation and soil survey data.",
+      "provider": { "@type": "Organization", "name": "LotRead" },
+      "areaServed": "US",
+      "offers": {
+        "@type": "Offer",
+        "price": "49",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/PreOrder"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is my lot buildable?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most raw land is buildable to some degree — the real question is what it costs to get there. LotRead's report gives you a parcel-specific site-work cost range and flags issues like floodplain, wetland, or poor septic feasibility that can rule a lot out or change the math entirely."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much does site work cost on raw land?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It depends entirely on the parcel. Driveway length and grade, cut-and-fill volume, septic feasibility, and utility distance can push a single lot's site-work cost anywhere from $20,000 to $120,000 or more. LotRead's report gives you a specific range for your parcel instead of a guess."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does a LotRead report include?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A LotRead report covers driveway length and grade, cut-and-fill volume for a house pad, septic feasibility class, distance to the nearest utility line, and a floodplain/wetland flag, summarized into a plain-English cost range. See the sample report for what this looks like on an actual parcel."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How is this different from state-average cost guides?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "State-average guides tell you what site work tends to cost somewhere in your state — not what it costs on your specific parcel. LotRead is built from lidar elevation data and soil survey data for the actual lot, not a statewide or county average."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
   :root {
     --ink: #1a1a1a;
@@ -39,10 +103,29 @@
     line-height: 1.25;
     margin: 0 0 16px;
   }
+  .direct-answer {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 12px;
+  }
   .dek {
     font-size: 1.1rem;
     color: var(--muted);
     margin: 0 0 32px;
+  }
+  .faq-item {
+    margin-bottom: 24px;
+  }
+  .faq-item:last-child {
+    margin-bottom: 0;
+  }
+  .faq-q {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+  .faq-a {
+    margin: 0;
   }
   section {
     margin-bottom: 40px;
@@ -233,6 +316,11 @@
   </header>
 
   <h1>Know what site work will cost before your due-diligence window closes.</h1>
+  <p class="direct-answer">
+    LotRead is an instant, parcel-specific site-work cost report for raw land — driveway
+    grading, septic feasibility, and utility distance, built from public elevation and
+    soil data for your actual lot.
+  </p>
   <p class="dek">
     A parcel-specific estimate for driveway, grading, septic feasibility, and utility
     distance on raw land anywhere in the US — built from lidar elevation data and soil
@@ -326,6 +414,47 @@
         <button type="submit" id="reserve-submit" class="cta">Notify me at $49</button>
       </form>
       <span id="cta-note" role="status" aria-live="polite"></span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Questions</h2>
+    <div class="faq-item">
+      <h3 class="faq-q">Is my lot buildable?</h3>
+      <p class="faq-a">
+        Most raw land is buildable to some degree — the real question is what it costs to
+        get there. LotRead's report gives you a parcel-specific site-work cost range and
+        flags issues like floodplain, wetland, or poor septic feasibility that can rule a
+        lot out or change the math entirely.
+      </p>
+    </div>
+    <div class="faq-item">
+      <h3 class="faq-q">How much does site work cost on raw land?</h3>
+      <p class="faq-a">
+        It depends entirely on the parcel. Driveway length and grade, cut-and-fill volume,
+        septic feasibility, and utility distance can push a single lot's site-work cost
+        anywhere from $20,000 to $120,000 or more. LotRead's report gives you a specific
+        range for your parcel instead of a guess.
+      </p>
+    </div>
+    <div class="faq-item">
+      <h3 class="faq-q">What does a LotRead report include?</h3>
+      <p class="faq-a">
+        A LotRead report covers driveway length and grade, cut-and-fill volume for a house
+        pad, septic feasibility class, distance to the nearest utility line, and a
+        floodplain/wetland flag, summarized into a plain-English cost range. See the
+        <a class="report-cta" href="sample-report.html">sample report</a> for what this
+        looks like on an actual parcel.
+      </p>
+    </div>
+    <div class="faq-item">
+      <h3 class="faq-q">How is this different from state-average cost guides?</h3>
+      <p class="faq-a">
+        State-average guides tell you what site work tends to cost somewhere in your
+        state — not what it costs on your specific parcel. LotRead is built from lidar
+        elevation data and soil survey data for the actual lot, not a statewide or county
+        average.
+      </p>
     </div>
   </section>
 
