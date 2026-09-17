@@ -23,6 +23,20 @@ const GITHUB_API = "https://api.github.com";
 // the content-injection vector in WO-014 Finding 3 (CLAUDE.md rule 9).
 const MAX_EMAIL_LENGTH = 254;
 
+// Rate limit: caps how many *new* submissions can land in a rolling window, closing
+// WO-023 QSE review Finding 2 (no rate limit on an unauthenticated write endpoint).
+// Vercel functions are stateless and run across many instances, so an in-memory
+// per-IP counter would reset unpredictably between invocations and offer only
+// illusory protection. Instead this counts entries by the `timestamp` already stored
+// in ops/data/lotread-submissions.json, read from the one file every request already
+// reads regardless — consistent across every instance, no new dependency, no new
+// infrastructure, no extra GitHub API call. This is a global ceiling, not a per-IP
+// one; it bounds the abuse scenario QSE described (a scripted burst of distinct
+// addresses in an afternoon) without needing a stateful primitive this environment
+// doesn't offer. Revisit the threshold if genuine traffic approaches it.
+const RATE_LIMIT_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
+const RATE_LIMIT_MAX_PER_WINDOW = 50;
+
 function isValidEmail(email) {
   return (
     typeof email === "string" &&
@@ -63,13 +77,37 @@ async function readSubmissions(owner, repo, filePath, branch) {
     throw new Error(`GitHub read failed: ${res.status} ${await res.text()}`);
   }
   const data = await res.json();
+
+  // Past this point the file is confirmed to exist (this is not the 404 branch), so
+  // any failure to decode or parse it must not fall through to an empty array --
+  // doing so lets the very next write silently overwrite every prior submission
+  // (WO-023 QSE review, Finding 3). GitHub's Contents API returns content: "" with
+  // encoding: "none" -- not an error -- for files between 1-100MB, which is the
+  // specific trigger; a corrupt byte in an existing file has the same effect. Either
+  // way: fail loudly here and let the caller's try/catch return a 500, instead of
+  // quietly resetting to [] and letting the caller overwrite a real, non-empty file.
+  if (data.encoding !== "base64") {
+    throw new Error(
+      `GitHub read returned encoding "${data.encoding}" instead of "base64" for an ` +
+        `existing file -- refusing to treat this as an empty dataset`
+    );
+  }
+
   const decoded = Buffer.from(data.content, "base64").toString("utf-8");
-  let submissions = [];
+  let submissions;
   try {
     submissions = JSON.parse(decoded);
-    if (!Array.isArray(submissions)) submissions = [];
   } catch (e) {
-    submissions = [];
+    throw new Error(
+      `Existing submissions file failed to parse as JSON -- refusing to treat this ` +
+        `as an empty dataset: ${e.message}`
+    );
+  }
+  if (!Array.isArray(submissions)) {
+    throw new Error(
+      "Existing submissions file did not contain a JSON array -- refusing to treat " +
+        "this as an empty dataset"
+    );
   }
   return { submissions, sha: data.sha };
 }
@@ -111,8 +149,17 @@ module.exports = async (req, res) => {
   const honeypot = body.botcheck;
   const email = typeof body.email === "string" ? body.email.trim() : "";
 
-  // Honeypot tripped: pretend success, write nothing, don't tip off the bot.
-  if (honeypot) {
+  // Honeypot: the client always sends botcheck as a string (see the fetch call in
+  // index.html) -- populated only if something fills in a field real users never see
+  // (tabindex="-1", positioned off-screen). This used to reject only a *non-empty*
+  // botcheck, which meant a bot posting straight to this endpoint -- skipping the
+  // client's hidden field entirely -- arrived with botcheck === undefined and sailed
+  // through identically to a legitimate blank submission (WO-023 QSE review,
+  // Finding 2). Failing closed on "missing, wrong type, or non-empty" instead of just
+  // "non-empty" closes that gap without changing anything a real browser ever sends.
+  if (typeof honeypot !== "string" || honeypot !== "") {
+    // Missing field, wrong type, or filled in: pretend success, write nothing, don't
+    // tip off the bot.
     res.status(200).json({ ok: true });
     return;
   }
@@ -151,6 +198,19 @@ module.exports = async (req, res) => {
     // this does not become an email-enumeration oracle.
     if (hasEmail(first.submissions, emailLower)) {
       res.status(200).json({ ok: true });
+      return;
+    }
+
+    // Rate limit: count *new* submissions in the rolling window before accepting
+    // another one. Known addresses already returned above without counting, so a
+    // dedupe hit never eats into the ceiling.
+    const windowStart = Date.now() - RATE_LIMIT_WINDOW_MS;
+    const recentCount = first.submissions.filter((s) => {
+      const t = s && typeof s.timestamp === "string" ? Date.parse(s.timestamp) : NaN;
+      return !Number.isNaN(t) && t >= windowStart;
+    }).length;
+    if (recentCount >= RATE_LIMIT_MAX_PER_WINDOW) {
+      res.status(429).json({ ok: false, error: "Too many submissions -- please try again later" });
       return;
     }
 
