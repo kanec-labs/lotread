@@ -180,11 +180,20 @@ module.exports = async (req, res) => {
     return;
   }
 
+  // ip and userAgent are deliberately not collected. WO-023 QSE review Finding 7:
+  // req.headers["user-agent"] was stored verbatim and unbounded into
+  // ops/data/lotread-submissions.json -- a file agents read -- with no length cap or
+  // sanitization, a strictly better injection vector than the email field WO-014
+  // Finding 3 already closed. Dropping both fields (rather than truncating) closes
+  // Finding 7 outright instead of just bounding it, and incidentally closes WO-014
+  // Finding 4 (ip/userAgent retained with no privacy notice) as a side effect: a
+  // waitlist does not need either field to function, and the charter's
+  // minimum-collection line says not to keep data the product doesn't use. Nothing
+  // downstream reads these fields -- confirmed against ops/data/lotread-submissions.json
+  // and every WO/DECISIONS reference to this file before removing them.
   const entry = {
     email,
     timestamp: new Date().toISOString(),
-    ip: req.headers["x-forwarded-for"] || req.socket?.remoteAddress || null,
-    userAgent: req.headers["user-agent"] || null,
   };
 
   const emailLower = email.toLowerCase();
@@ -210,6 +219,17 @@ module.exports = async (req, res) => {
       return !Number.isNaN(t) && t >= windowStart;
     }).length;
     if (recentCount >= RATE_LIMIT_MAX_PER_WINDOW) {
+      // WO-028 QSE re-verification: this branch had no logging, so a real lockout
+      // (or an attacker deliberately tripping the global ceiling) would be invisible
+      // until someone noticed the submissions file had stopped growing. Visible in
+      // Vercel's function logs now.
+      console.error(
+        "lotread reserve: rate limit hit",
+        recentCount,
+        "submissions in the last",
+        RATE_LIMIT_WINDOW_MS / (60 * 60 * 1000),
+        "hours"
+      );
       res.status(429).json({ ok: false, error: "Too many submissions -- please try again later" });
       return;
     }
